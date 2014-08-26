@@ -1,0 +1,33 @@
+---
+# Download Drupal using Git.
+- name: Check out Drupal Core to the default location.
+  git: >
+    repo={{ drupal_repo }}
+    version={{ drupal_repo_version }}
+    update=no
+    dest={{ drupal_install_path }}
+
+- name: Install Drupal.
+  command: >
+    drush si -y
+    --site-name="{{ drupal_site_name }}"
+    --account-name=admin
+    --account-pass=admin
+    --db-url=mysql://{{ drupal_mysql_user }}:{{ drupal_mysql_password }}@localhost/{{ drupal_mysql_database }}
+    chdir={{ drupal_docroot }}
+    creates={{ drupal_docroot }}/sites/default/settings.php
+  notify: restart webserver
+  when: drupal_site_install == true
+
+# SEE: https://drupal.org/node/2121849#comment-8413637
+- name: Set permissions properly on settings.php.
+  file: >
+    path={{ drupal_docroot }}/sites/default/settings.php
+    mode=744
+
+- name: Set permissions properly on files directory.
+  file: >
+    path={{ drupal_docroot }}/sites/default/files
+    mode=777
+    state=directory
+    recurse=yes

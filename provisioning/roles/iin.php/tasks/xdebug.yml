@@ -1,0 +1,23 @@
+---
+- name: Ensure XDebug is installed.
+  apt: >
+    name=php5-xdebug
+    state=latest
+  notify: 
+    - restart webserver
+    - restart php-fpm
+
+- name: Find xdebug.so
+  command: find / -name xdebug.so
+  register: php_xdebug_so_path
+
+- name: Place XDebug configuration file in place.
+  template: >
+    src=xdebug.ini.j2
+    dest={{ php_extension_conf_path }}/xdebug.ini
+    owner=root group=root mode=644
+  notify:
+    - restart webserver
+    - restart php-fpm
+
+ 

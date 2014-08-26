@@ -1,0 +1,18 @@
+---
+- name: Install PEAR 
+  apt: name=php-pear state=latest
+  tags: profiling
+
+- name: Install XHPROF
+  command: "pecl install -f xhprof"
+  notify: 
+    - restart webserver
+    - restart php-fpm
+
+- name: XHPROF | Debugging configuration file, xhprof.ini
+  template: src=xhprof.ini.j2 dest={{ php_extension_conf_path }}/xhprof.ini
+  notify: 
+    - restart webserver
+    - restart php-fpm
+
+ 

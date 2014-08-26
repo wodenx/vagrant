@@ -1,0 +1,10 @@
+- name: Ensure php-mysql is installed.
+  apt: >
+    name={{ item }}
+    state=latest
+  with_items:
+    - php5-mysql
+  notify:
+    - restart webserver
+    - restart php-fpm
+

@@ -1,0 +1,57 @@
+---
+# Main Tasks for PHP installation.
+- name: Ensure PHP packages are installed.
+  apt: >
+    name={{ item }}
+    state=latest
+  with_items: php_packages
+  notify: 
+    - restart webserver
+    - restart php-fpm
+
+# @todo remove when not enabled
+- include: mysql.yml
+  when: php_enable_mysql
+
+# @todo remove when not enabled
+- include: xdebug.yml
+  when: php_enable_xdebug
+
+# @todo remove when not enabled
+- include: xhprof.yml
+  when: php_enable_xdebug
+
+- name: Place PHP configuration file in place.
+  template: >
+    src=php.ini.j2
+    dest={{ php_conf_path }}/php.ini
+    owner=root group=root mode=644
+  notify: 
+    - restart webserver
+    - restart php-fpm
+
+- name: Update Some PHP-CLI Variables
+  lineinfile: >
+    dest={{ php_cli_conf_path}}/php.ini
+    state=present
+    regexp="{{ item.regexp }}"
+    line="{{ item.line }}"
+  with_items:
+    - { regexp: "^;?date\\.timezone", line: "date.timezone = {{ php_date_timezone }}" }
+    - { regexp: "^;?memory_limit", line: "memory_limit = {{ php_memory_limit }}" } 
+  notify: 
+    - restart webserver
+    - restart php-fpm
+
+- name: Place APC configuration file in place.
+  template: >
+    src=apc.ini.j2
+    dest="{{ php_extension_conf_path }}/{{ php_apc_conf_filename }}"
+    owner=root group=root mode=644
+  notify: 
+    - restart webserver
+    - restart php-fpm
+
+- name: Ensure php-fpm is started and enabled at boot (if configured).
+  service: name=php-fpm state=started enabled=yes
+  when: php_enable_php_fpm

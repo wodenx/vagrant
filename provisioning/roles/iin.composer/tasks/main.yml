@@ -1,0 +1,17 @@
+---
+# @todo We should have a version of this for RHEL/CentOS
+- name: Whitelist phar files for suhosin
+  lineinfile: >
+    dest="/etc/php5/cli/php.ini"
+    regexp="^suhosin\\.executor\\.include\\.whitelist"
+    line="suhosin.executor.include.whitelist = phar"
+
+- name: Install Composer into the current directory.
+  shell: >
+    curl -sS https://getcomposer.org/installer | php -d suhosin.executor.include.whitelist=phar
+    creates={{ composer_path }}
+
+- name: Move Composer into globally-accessible location.
+  shell: >
+    mv composer.phar {{ composer_path }}
+    creates={{ composer_path }}

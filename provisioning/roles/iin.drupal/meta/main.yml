@@ -1,0 +1,7 @@
+---
+dependencies:
+  - { role: iin.common }
+  - { role: iin.apache }
+  - { role: iin.mysql }
+  - { role: iin.php }
+  - { role: iin.composer }

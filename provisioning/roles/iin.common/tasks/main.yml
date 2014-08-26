@@ -1,0 +1,29 @@
+---
+##
+# tasks file for iin.common
+##
+
+# Housekeeping
+- name: Common | Update apt cache
+  apt: update-cache=yes
+  sudo: yes
+
+- name: Common | Upgrade apt
+  apt: upgrade=yes
+  sudo: yes
+
+##
+# Apt package installation of required software.
+#
+- name: Common | Install common packages.
+  action: apt pkg={{item}} state=installed
+  sudo: yes
+  tags: common
+  with_items:
+    - build-essential
+    - libpcre3-dev
+    - curl
+    - sendmail
+    - unzip
+    - git
+

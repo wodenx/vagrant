@@ -1,0 +1,18 @@
+<VirtualHost *:80>
+    ServerName {{ drupal_domain }}
+    {% for alias in drupal_server_aliases %}
+    ServerAlias {{ alias }} 
+    {% endfor %}
+    DocumentRoot {{ drupal_docroot }}
+    ErrorLog {{ drupal_error_log }}
+    CustomLog {{ drupal_access_log }} "%h %l %u %t \"%r\" %>s %b"
+    php_flag log_errors on
+    php_value error_reporting 'E_ALL & ~E_NOTICE'
+    php_value error_log {{ drupal_php_error_log }}
+    <Directory "{{ drupal_docroot }}">
+        Order allow,deny
+        Allow from all
+        Options FollowSymLinks Indexes
+        AllowOverride All
+    </Directory>
+</VirtualHost>

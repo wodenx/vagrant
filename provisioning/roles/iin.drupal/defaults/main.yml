@@ -1,0 +1,32 @@
+---
+# Drupal install settings.
+# The project name will be used as a default for directories, repositories, etc.
+drupal_project_name: "drupal"
+drupal_repo: "http://git.drupal.org/project/{{ drupal_project_name}}.git"
+# The git tag or branch to check out.
+drupal_repo_version: "7.x"
+drupal_install_path: "/var/www/{{ drupal_project_name }}"
+
+# Apache settings
+drupal_docroot: "{{ drupal_install_path }}"
+drupal_domain: "{{drupal_project_name }}.iin.nu"
+drupal_server_aliases: [] 
+drupal_error_log: "/var/log/apache2/{{ drupal_domain }}.error.log"
+drupal_access_log: "/var/log/apache2/{{ drupal_domain }}.access.log"
+drupal_php_error_log: '/var/log/apache2/{{ drupal_domain }}.php_error.log'
+
+# MySql Settings 
+drupal_mysql_user: "{{ drupal_project_name }}"
+drupal_mysql_password: password
+drupal_mysql_database: "{{ drupal_project_name }}"
+
+# Drupal site installation settings.
+drupal_site_install: true
+drupal_site_name: "Drupal"
+
+# Drush settings.
+drush_repo: https://github.com/drush-ops/drush.git 
+drush_install_path: /usr/local/share/drush
+drush_path: /usr/local/bin/drush
+# The git tag or branch to check out.
+drush_repo_version: master

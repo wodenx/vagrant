@@ -1,0 +1,4 @@
+#!/bin/bash
+if [ -z $1 ]; then
+  echo You must specify an IP address for the virtual machine
+ fi
